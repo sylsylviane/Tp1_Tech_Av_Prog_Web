@@ -1,1 +1,536 @@
 <!-- RÉDIGER LA DOCUMENTATION DE L'API. DOIT CONTENIR LES LIENS VERS LES DIFFÉRENTES ROUTES ET DONNER DES EXPLICATIONS SUR LES DIFFÉRENTS PARMÈTRES NÉCESSAIRES S'IL Y A LIEU -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style type="text/css" media="screen">
+        body,
+        html {
+            font-family: var(--markdown-font-family,
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    "Segoe WPC",
+                    "Segoe UI",
+                    system-ui,
+                    "Ubuntu",
+                    "Droid Sans",
+                    sans-serif);
+            font-size: var(--markdown-font-size, 14px);
+            padding: 0 26px;
+            line-height: var(--markdown-line-height, 22px);
+            word-wrap: break-word;
+        }
+
+        body {
+            padding-top: 1em;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        ol,
+        p,
+        pre,
+        ul {
+            margin-top: 0;
+        }
+
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-weight: 400;
+            margin-bottom: 1em;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        a:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 1px solid -webkit-focus-ring-color;
+            outline-offset: -1px;
+        }
+
+        p {
+            margin-bottom: 0.7em;
+        }
+
+        ol,
+        ul {
+            margin-bottom: 0.7em;
+        }
+
+        hr {
+            border: 0;
+            height: 2px;
+            border-bottom: 2px solid;
+            margin-bottom: 25px;
+            color: rgb(226, 226, 226);
+        }
+
+        h1 {
+            padding-bottom: 0.3em;
+            line-height: 1.2;
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            font-weight: 400;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            border-bottom: 1px solid;
+        }
+
+        td,
+        th {
+            padding: 5px 10px;
+        }
+
+        table>tbody>tr+tr>td {
+            border-top: 1px solid;
+        }
+
+        blockquote {
+            margin: 0 7px 0 5px;
+            padding: 0 16px 0 10px;
+            border-left-width: 5px;
+            border-left-style: solid;
+        }
+
+        code {
+            font-family: var(--vscode-editor-font-family,
+                    "SF Mono",
+                    Monaco,
+                    Menlo,
+                    Consolas,
+                    "Ubuntu Mono",
+                    "Liberation Mono",
+                    "DejaVu Sans Mono",
+                    "Courier New",
+                    monospace);
+            font-size: 1em;
+            line-height: 1.357em;
+        }
+
+        body.wordWrap pre {
+            white-space: pre-wrap;
+        }
+
+        pre.hljs code>div,
+        pre:not(.hljs) {
+            padding: 16px;
+            border-radius: 3px;
+            overflow: auto;
+        }
+
+        pre code {
+            color: var(--vscode-editor-foreground);
+            tab-size: 4;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="api-de-gestion-des-livres">API de Gestion des Livres</h1>
+    <p>L'API de gestion des livres permet aux utilisateurs:</p>
+    <pre><code>
+        - Ajouter un livre à la base de données.
+        - Récupérer tous les livres de la base de données et possibilité de les ordonner par titre, auteur ou date (ordre ascendant ou descendant) et limiter le nombre de documents retournés.
+        - Récupérer un seul livre de la base de données par son identifiant.
+        - Récupérer des livres selon leur catégorie.
+        - Récupérer des livres selon leur auteur et ordonner par date ascendante ou descendante.
+        - Récupérer un livre selon son isbn.
+        - Modifier un livre de la base de données par son identifiant.
+        - Supprimer un livre de la base de données par son identifiant.
+</code></pre>
+    <h2 id="authentification">Authentification</h2>
+    <p>
+        L'API utilise l'authentification basée sur les tokens JWT (JSON
+        Web Tokens) et permet de :
+    </p>
+    <pre><code>- S'inscrire en tant qu'utilisateur avec un courriel et un mot de passe.
+- Se connecter avec un courriel et un mot de passe.
+</code></pre>
+    <h2 id="routes">Routes</h2>
+
+    <h3 id="récupérer-la-liste-des-livres-get">
+        Récupérer la liste des livres (GET)
+    </h3>
+    <p><strong>Route:</strong> <code>/livres</code></p>
+    <p>
+        <strong>Description:</strong> Retourne la liste de tous les livres et leur
+        identifiant.
+    </p>
+    <p><strong>Requête:</strong></p>
+    <pre><code class="language-http">GET /livres
+
+Réponse:
+[
+    {
+        "id": "hrAV1ta0clRgMJhzhGft",
+        "titre": "Billy Summers",
+        "description": " Billy Summers est un tueur à gages - le meilleur -, mais il n'accepte de liquider que les salauds. Aujourd'hui, il veut décrocher. Avant cela, seul dans sa chambre, il se prépare pour sa dernière mission.... À la fois thriller, récit de guerre, road trip et déclaration d'amour à l'Amérique des petites villes, Billy Summers est l'un des textes les plus surprenants de l'oeuvre de Stephen King, qui y a mis tout son génie et toute son humanité..",
+        "editeur": "Le livre de poche",
+        "isbn": "9782253247432",
+        "pages": "722",
+        "date": "2024",
+        "image": "billy-summers.jpg",
+        "auteur": "Stephen King",
+        "categories": [
+            "Science Fiction",
+            "Fantastique"
+        ]
+    },
+    {
+        "id": "Y7NbtSnZ7Pp7AJ656vMD",
+        "titre": "C'est aussi ça, l'Amérique: portraits d'un pays polarisé",
+        "description": "Les États-Unis sont-ils brisés? Armes à feu, avortement, religion, (dés)information, justice… Pourquoi ces enjeux divisent-ils plus que jamais les Américains ? Le journaliste Frédéric Arnould a sillonné les États-Unis et rencontré une foule de citoyens de tous horizons, soulevant – sans jamais la poser – cette éternelle question : « Qu’est-ce qui se passe avec vous, les Américains? » Un portrait instructif et humain de ce pays plein de promesses, qui garantit à ses citoyens une grande liberté et les outils pour la défendre… pour le meilleur et pour le pire.",
+        "editeur": "Québec Amérique",
+        "isbn": "9782764454992",
+        "pages": "288",
+        "date": "2025",
+        "image": "amerique-portrait-pays-polarise.jpg",
+        "auteur": "Frédéric Arnould",
+        "categories": [
+            "Politique"
+        ]
+    }
+    ...
+]
+</code></pre>
+    <br />
+    <hr />
+
+    <h3 id="ajouter-un-livre-post">Ajouter un livre (POST)</h3>
+    <p><strong>Route:</strong> <code>/livres</code></p>
+    <p><strong>Description:</strong> Ajoute un livre à la base de données.</p>
+    <p><strong>Requête:</strong></p>
+    <pre><code class="language-http">POST /livres
+
+Body:
+{
+        "titre": "C'est aussi ça, l'Amérique: portraits d'un pays polarisé",
+        "description": "Les États-Unis sont-ils brisés? Armes à feu, avortement, religion, (dés)information, justice… Pourquoi ces enjeux divisent-ils plus que jamais les Américains ? Le journaliste Frédéric Arnould a sillonné les États-Unis et rencontré une foule de citoyens de tous horizons, soulevant – sans jamais la poser – cette éternelle question : « Qu’est-ce qui se passe avec vous, les Américains? » Un portrait instructif et humain de ce pays plein de promesses, qui garantit à ses citoyens une grande liberté et les outils pour la défendre… pour le meilleur et pour le pire.",
+        "editeur": "Québec Amérique",
+        "isbn": "9782764454992",
+        "pages": "288",
+        "categories": "Politique",
+        "date": "2025",
+        "image": "amerique-portrait-pays-polarise.jpg",
+        "auteur": "Frédéric Arnould"
+}
+
+Réponses possibles:
+
+{ message: "Le livre a été ajouté." }
+
+ou
+
+{message: "Ce livre est déjà présent dans la base de données. Veuillez entrer un autre livre."}
+</code></pre>
+    <br />
+    <hr />
+    <h3 id="récupérer-un-livre-get">Récupérer un livre (GET)</h3>
+    <p><strong>Route:</strong> <code>/livres/:id</code></p>
+    <p><strong>Description:</strong> Retourne un livre et son identifiant.</p>
+    <p><strong>Requête:</strong></p>
+    <pre><code class="language-http">GET /livres/hrAV1ta0clRgMJhzhGft
+
+Réponse: 
+{
+    "titre": "Billy Summers",
+    "description": " Billy Summers est un tueur à gages - le meilleur -, mais il n'accepte de liquider que les salauds. Aujourd'hui, il veut décrocher. Avant cela, seul dans sa chambre, il se prépare pour sa dernière mission.... À la fois thriller, récit de guerre, road trip et déclaration d'amour à l'Amérique des petites villes, Billy Summers est l'un des textes les plus surprenants de l'oeuvre de Stephen King, qui y a mis tout son génie et toute son humanité..",
+    "editeur": "Le livre de poche",
+    "isbn": "9782253247432",
+    "pages": "722",
+    "date": "2024",
+    "image": "billy-summers.jpg",
+    "auteur": "Stephen King",
+    "categories": [
+        "Science Fiction",
+        "Fantastique"
+    ],
+    "id": "hrAV1ta0clRgMJhzhGft"
+}
+</code></pre>
+
+    <br />
+    <hr />
+    <h3 id="récupérer-les-livres-dun-auteur-get">
+        Récupérer les livres d'un auteur (GET)
+    </h3>
+    <p><strong>Route:</strong> <code>/livres/auteur/:auteur</code></p>
+    <p>
+        <strong>Description:</strong> Retourne les livres d'un auteur et leur
+        identifiant.
+    </p>
+    <p><strong>Requête:</strong></p>
+    <pre><code class="language-http">GET /livres/auteur/stephen-king
+
+Réponse:
+[
+    {
+        "id": "Ah4Fowm50gCzzA3JEntz",
+        "date": "2013",
+        "image": "the-shinning.jpg",
+        "pages": "",
+        "titre": "The shinning",
+        "isbn": "9780307743657",
+        "description": "Jack Torrance’s new job at the Overlook Hotel is the perfect chance for a fresh start. As the off-season caretaker at the atmospheric old hotel, he’ll have plenty of time to spend reconnecting with his family and working on his writing. But as the harsh winter weather sets in, the idyllic location feels ever more remote . . . and more sinister. And the only one to notice the strange and terrible forces gathering around the Overlook is Danny Torrance, a uniquely gifted five-year-old.",
+        "auteur": "Stephen King",
+        "editeur": "Anchor",
+        "categories": [
+            "Science Fiction",
+            "Fantastique"
+        ]
+    },
+    {
+        "id": "Ja0VoNxerSbPJ7x6vmmY",
+        "titre": "Plus noir que noir",
+        "description": "Un secret bien gardé est à l'origine du talent de deux artistes, un flash psychique sans précédent bouleverse de manière catastrophique l'existence de Danny, un veuf éploré se rend en Floride et reçoit un héritage inattendu accompagné d'importantes obligations, un vétéran du Vietnam répond à une offre d'emploi, etc. Douze nouvelles plongeant dans les tréfonds les plus sombres de la vie.",
+        "editeur": "Albin Michel",
+        "isbn": "9782226493101",
+        "pages": "550",
+        "date": "2025",
+        "image": "plus-noir-que-noir.jpg",
+        "auteur": "Stephen King",
+        "categories": [
+            "Horreur"
+        ]
+    },
+    {
+        "id": "hrAV1ta0clRgMJhzhGft",
+        "titre": "Billy Summers",
+        "description": " Billy Summers est un tueur à gages - le meilleur -, mais il n'accepte de liquider que les salauds. Aujourd'hui, il veut décrocher. Avant cela, seul dans sa chambre, il se prépare pour sa dernière mission.... À la fois thriller, récit de guerre, road trip et déclaration d'amour à l'Amérique des petites villes, Billy Summers est l'un des textes les plus surprenants de l'oeuvre de Stephen King, qui y a mis tout son génie et toute son humanité..",
+        "editeur": "Le livre de poche",
+        "isbn": "9782253247432",
+        "pages": "722",
+        "date": "2024",
+        "image": "billy-summers.jpg",
+        "auteur": "Stephen King",
+        "categories": [
+            "Science Fiction",
+            "Fantastique"
+        ]
+    }
+]
+</code></pre>
+    <br />
+    <hr />
+    <h3 id="récupérer-un-livre-selon-son-isbn-get">
+        Récupérer un livre selon son ISBN (GET)
+    </h3>
+    <p><strong>Route:</strong> <code>/livres/isbn/:isbn</code></p>
+    <p>
+        <strong>Description:</strong> Retourne un livre et son identifiant selon
+        son ISBN.
+    </p>
+    <p><strong>Requête:</strong></p>
+    <pre><code class="language-http">GET /livres/isbn/9782824627571
+
+Réponse:
+[
+    {
+        "id": "MGyG0X72PG4EYmq2ZJIH",
+        "titre": "La femme de ménage voit tout",
+        "auteur": "Freida Mcfadden",
+        "description": "« Je me demande si je n'ai pas commis une terrible erreur en m'installant ici... » . Après avoir été au service des autres en tant que femme de ménage, Millie s'est enfin construit une vie à elle. Elle vient même d'emménager dans une belle maison, dans une petite impasse chic et tranquille, avec son mari et ses deux enfants.. Mais son rêve d'une vie paisible est rapidement terni par la rencontre de ses voisins. Il y a Suzette, bien trop snob et aguicheuse, son insipide mari, mais surtout leur terrifiante femme de ménage au regard perçant et au comportement plus que suspect.. Les craintes de Millie montent d'un cran lorsque des bruits étranges se font entendre la nuit dans sa propre maison. Pire : elle éprouve un étrange malaise et se sent épiée. C'est certain, quelque chose ne tourne pas rond dans cette rue si tranquille. Mais est-elle prête à en découvrir les secrets ? Et surtout, le temps de comprendre ce qui ne va pas, tout peut arriver.... Elle vous observe. Et vous n'avez nulle part où vous cacher.",
+        "editeur": "City Ed.",
+        "isbn": "9782824627571",
+        "pages": "392",
+        "date": "2024",
+        "image": "femme-menage-voit-tout.jpg",
+        "categories": [
+            "Policier"
+        ]
+    }
+]
+</code></pre>
+    <br />
+    <hr />
+    <h3 id="récupérer-un-livre-selon-les-catégories-get">
+        Récupérer un livre selon les catégories (GET)
+    </h3>
+    <p><strong>Route:</strong> <code>/livres/categories/:categories</code></p>
+    <p>
+        <strong>Description:</strong> Retourne les livres et leur identifiant
+        selon la catégorie .
+    </p>
+    <p><strong>Requête:</strong></p>
+    <pre><code class="language-http">GET /livres/categories/policier
+
+Réponse:
+[
+    {
+        "id": "MGyG0X72PG4EYmq2ZJIH",
+        "titre": "La femme de ménage voit tout",
+        "auteur": "Freida Mcfadden",
+        "description": "« Je me demande si je n'ai pas commis une terrible erreur en m'installant ici... » . Après avoir été au service des autres en tant que femme de ménage, Millie s'est enfin construit une vie à elle. Elle vient même d'emménager dans une belle maison, dans une petite impasse chic et tranquille, avec son mari et ses deux enfants.. Mais son rêve d'une vie paisible est rapidement terni par la rencontre de ses voisins. Il y a Suzette, bien trop snob et aguicheuse, son insipide mari, mais surtout leur terrifiante femme de ménage au regard perçant et au comportement plus que suspect.. Les craintes de Millie montent d'un cran lorsque des bruits étranges se font entendre la nuit dans sa propre maison. Pire : elle éprouve un étrange malaise et se sent épiée. C'est certain, quelque chose ne tourne pas rond dans cette rue si tranquille. Mais est-elle prête à en découvrir les secrets ? Et surtout, le temps de comprendre ce qui ne va pas, tout peut arriver.... Elle vous observe. Et vous n'avez nulle part où vous cacher.",
+        "editeur": "City Ed.",
+        "isbn": "9782824627571",
+        "pages": "392",
+        "date": "2024",
+        "image": "femme-menage-voit-tout.jpg",
+        "categories": [
+            "Policier"
+        ]
+    },
+    {
+        "id": "ckhr4rddO3LntUjpoHPv",
+        "titre": "À qui sait attendre",
+        "auteur": "Micheal Connelly",
+        "description": "Harry Bosch et Renée Ballard enquêtent sur des cold cases qui ont marqué la cité des anges . À la tête de l'unité des Affaires non résolues, Renée Ballard retrouve la trace, grâce à l'ADN, d'un violeur en série qui a terrorisé Los Angeles deux décennies plus tôt avant de disparaître. Mais très vite, elle va se heurter à des secrets et à des obstacles juridiques qui la forcent à demander son aide à Harry Bosch.. Et cette fois, elle pourra compter sur une autre alliée : Maddie, la fille de Harry, qui rejoint l'unité et dévoile des documents surprenants concernant l'affaire la plus emblématique du siècle dernier, celle du Dahlia noir.. Alors que la première enquête devient dangereuse, Ballard, Harry et Maddie ne seront pas de trop pour retrouver des criminels que les familles des victimes attendent depuis longtemps déjà de voir arrêtés..",
+        "editeur": "Calmann-levy",
+        "isbn": "9782702189047",
+        "pages": "480",
+        "date": "2025",
+        "image": "qui-sait-attendre.jpg",
+        "categories": [
+            "Policier"
+        ]
+    }
+]
+</code></pre>
+    <br />
+    <hr />
+    <h3 id="supprimer-un-livre-delete">Supprimer un livre (DELETE)</h3>
+    <p><strong>Route:</strong> <code>/livres/:id</code></p>
+    <p>
+        <strong>Description:</strong> Supprime un livre de la base de données.
+    </p>
+    <p><strong>Requête:</strong></p>
+    <pre><code class="language-http">DELETE /livres/MGyG0X72PG4EYmq2ZJIH
+
+Réponses possibles:
+
+{ message: "Le livre a été supprimé." }
+
+ou
+
+{message: "Le livre n'existe pas. Réessayer avec un autre identifiant."}
+</code></pre>
+    <br />
+    <hr />
+    <h3 id="modifier-un-livre-put">Modifier un livre (PUT)</h3>
+    <p><strong>Route:</strong> <code>/livres/:id</code></p>
+    <p>
+        <strong>Description:</strong> Met à jour les informations d'un livre
+        existant.
+    </p>
+    <p><strong>Requête:</strong></p>
+    <pre><code class="language-http">PUT /livres/3JNbUmSeTiuWhnu3ZO5q
+
+Body:
+
+{
+       "id": "3JNbUmSeTiuWhnu3ZO5q",
+        "date": "2024",
+        "image": "art-pas-toujours-raison.jpg",
+        "pages": "120",
+        "titre": "L'Art de ne pas toujours avoir raison",
+        "isbn": "9782760994935 ",
+        "description": "Le dialogue démocratique est-il encore possible alors que les  médias sociaux et la joute politique favorisent les réactions épidermiques et polarisantes ? Comment sortir du cul-de-sac dans lequel nous sommes coincés et apprendre à discuter d’enjeux sociaux de manière à la fois robuste, inclusive et productive ? Car si nous sommes enclins à vouloir persuader l’autre, nous sommes étrangement démunis quand vient le temps de l’écouter et de nous laisser convaincre. Pourtant, tout échange authentique suppose que nous puissions avoir tort.. Afin de se retrouver dans cette cacophonie, l’auteur propose, avec une lucidité pleine d’humour, une lecture fine de notre époque, de ses limites comme de ses promesses. Convoquant Montaigne, il montre à quel point l’humilité, l’ouverture, la souplesse, la curiosité et l’écoute sont des vertus intellectuelles précieuses, que nous aurions plus que jamais intérêt à cultiver..",
+        "categories": [
+            "Philosophie Contemporaine"
+        ],
+        "auteur": "Martin Desrosiers",
+        "editeur": "Lemeac" 
+}
+
+Réponses possibles: 
+
+    {
+    "message": "Le livre a été modifié",
+    "livre": {
+        "id": "3JNbUmSeTiuWhnu3ZO5q",
+        "date": "2024",
+        "image": "art-pas-toujours-raison.jpg",
+        "pages": "120",
+        "titre": "L'Art de ne pas toujours avoir raison",
+        "isbn": "9782760994935 ",
+        "description": "Le dialogue démocratique est-il encore possible alors que les médias sociaux et la joute politique favorisent les réactions épidermiques et polarisantes ? Comment sortir du cul-de-sac dans lequel nous sommes coincés et apprendre à discuter d’enjeux sociaux de manière à la fois robuste, inclusive et productive ? Car si nous sommes enclins à vouloir persuader l’autre, nous sommes étrangement démunis quand vient le temps de l’écouter et de nous laisser convaincre. Pourtant, tout échange authentique suppose que nous puissions avoir tort.. Afin de se retrouver dans cette cacophonie, l’auteur propose, avec une lucidité pleine d’humour, une lecture fine de notre époque, de ses limites comme de ses promesses. Convoquant Montaigne, il montre à quel point l’humilité, l’ouverture, la souplesse, la curiosité et l’écoute sont des vertus intellectuelles précieuses, que nous aurions plus que jamais intérêt à cultiver..",
+        "categories": [
+            "Philosophie Contemporaine"
+        ],
+        "auteur": "Martin Desrosiers",
+        "editeur": "Lemeac"
+    }
+}
+
+ou
+
+{message: "Le livre n'existe pas. Réessayer avec un autre identifiant."}
+</code></pre>
+    <br />
+    <hr />
+    <h3 id="sinscrire-en-tant-quutilisateur-post">
+        S'inscrire en tant qu'utilisateur (POST)
+    </h3>
+    <p><strong>Route:</strong> <code>/utilisateurs/inscription</code></p>
+    <p>
+        <strong>Description:</strong> S'inscrire en tant qu'utilisateur
+        avec un courriel et un mot de passe.
+    </p>
+    <p><strong>Requête:</strong></p>
+    <pre><code class="language-http">POST /utilisateurs/inscription
+
+Body:
+{
+    "courriel": "lisa@gmail.com",
+    "mdp": "Abc123!!"
+}
+
+Réponses possibles:
+
+{ message: "Cet utilisateur existe déjà." }
+
+ou
+
+{ message: "L'utilisateur a été créé." }
+</code></pre>
+    <br />
+    <hr />
+    <h3 id="se-connecter-en-tant-quutilisateur-post">
+        Se connecter en tant qu'utilisateur (POST)
+    </h3>
+    <p><strong>Route:</strong> <code>/utilisateurs/connexion</code></p>
+    <p>
+        <strong>Description:</strong> Se connecter en tant qu'utilisateur avec
+        un courriel et un mot de passe.
+    </p>
+    <p><strong>Requête:</strong></p>
+    <p>```http POST /utilisateurs/connexion</p>
+    <p>
+        Body: { "courriel": "lisa@gmail.com",
+        "mdp": "Abc123!!" }
+    </p>
+    <p>Réponses possibles:</p>
+    <p>{ message: "Le courriel n'existe pas." }</p>
+    <p>ou</p>
+    <p>{ message: "Utilisateur connecté." }</p>
+    <br>
+</body>
+
+</html>
