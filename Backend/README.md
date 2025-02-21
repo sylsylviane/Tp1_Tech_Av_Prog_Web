@@ -390,3 +390,55 @@ Réponses possibles:
 ou
 
 { message: "Utilisateur connecté." }
+
+```
+
+### Modifier un utilisateur (PUT)
+
+**Route:** `/utilisateurs/:id`
+
+**Description:** Modifier un utilisateur.
+
+**Requête:**
+
+```http
+PUT /utilisateurs/tkX89K8IQ7UqDmBAwfK7
+
+Body:
+{
+    "courriel": "louis@gmail.com",
+    "mdp": "Abc123!!"
+}
+
+Réponses possibles:
+
+{
+    "message": "L'utilisateur a été modifié.",
+    "utilisateur": {
+        "courriel": "louis@gmail.com",
+        "mdp": "$2b$10$AFrKyKmvs3MXFGmSMdy9CO5AoFAxiMaHRxBXPAeUnb6O/WcxYoPCW"
+    }
+}
+
+```
+
+### Supprimer un utilisateur (DELETE)
+
+**Route:** `/utilisateurs/:id`
+
+**Description:** Supprimer un utilisateur.
+
+**Requête:**
+
+```http
+DEL /utilisateurs/tkX89K8IQ7UqDmBAwfK7
+
+Body:
+{
+    "courriel": "louis@gmail.com",
+}
+
+Réponse:
+
+{ message: "L'utilisateur a été supprimé." }
+

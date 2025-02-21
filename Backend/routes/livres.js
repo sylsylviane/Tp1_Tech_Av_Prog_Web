@@ -19,9 +19,7 @@ routeur.get(
       // .isString()
       .isLength({ max: 100 })
       .isIn(["titre", "auteur", "date"])
-      .withMessage(
-        "Vous pouvez ordonner par titre, auteur ou date."
-      ),
+      .withMessage("Vous pouvez ordonner par titre, auteur ou date."),
     check("direction")
       .escape()
       .trim()
@@ -57,7 +55,6 @@ routeur.get(
       donnees.forEach((donnee) => {
         const livre = { id: donnee.id, ...donnee.data() };
         livres.push(livre);
-
       });
 
       if (livres.length == 0) {
@@ -94,10 +91,8 @@ routeur.get(
       .trim()
       .optional()
       .isLength({ max: 100 })
-      .isIn(["titre", "auteur", "editeur", "pages", "date"])
-      .withMessage(
-        "Vous pouvez ordonner par titre, auteur, éditeur, nombre de pages ou date"
-      ),
+      .isIn(["titre", "date"])
+      .withMessage("Vous pouvez ordonner par titre ou date."),
     check("direction")
       .escape()
       .trim()
@@ -169,6 +164,19 @@ routeur.get(
       .withMessage(
         "Veuillez entrer un nom de catégorie de 100 caractères et moins."
       ),
+    check("ordre")
+      .escape()
+      .trim()
+      .optional()
+      .isLength({ max: 100 })
+      .isIn(["titre", "date"])
+      .withMessage("Vous pouvez ordonner par titre ou date."),
+    check("direction")
+      .escape()
+      .trim()
+      .optional()
+      .isIn(["asc", "desc"])
+      .withMessage("Choisissez entre asc ou desc."),
   ],
   async (req, res) => {
     try {
@@ -178,6 +186,7 @@ routeur.get(
           .status(400)
           .json({ message: "Données invalides.", erreurValidation });
       }
+      const { ordre = "date", direction = "asc" } = req.query;
       let { categories } = req.params;
       categories = categories.split("-");
 
@@ -192,6 +201,7 @@ routeur.get(
       const donnees = await db
         .collection("livres")
         .where("categories", "array-contains", categories)
+        .orderBy(ordre, direction)
         .get();
 
       donnees.forEach((donnee) => {
@@ -408,7 +418,7 @@ routeur.post(
       if (livreExiste) {
         return res.status(404).json({
           message:
-            "Ce livre est déjà présent dans la base de données. Veuillez entrer un autre livre."
+            "Ce livre est déjà présent dans la base de données. Veuillez entrer un autre livre.",
         });
       } else {
         await db.collection("livres").add(body);
@@ -416,7 +426,7 @@ routeur.post(
       }
     } catch (erreur) {
       return res.status(500).json({
-        message: "Une erreur est survenue. Réessayez dans quelques instants."
+        message: "Une erreur est survenue. Réessayez dans quelques instants.",
       });
     }
   }
@@ -475,32 +485,21 @@ routeur.put(
       }
       const { id } = req.params;
       const { body } = req;
-      const livres = [];
-      let idExiste = false;
-      const donnees = await db.collection("livres").get();
 
-      donnees.forEach((donnee) => {
-        const livre = { id: donnee.id, ...donnee.data() };
-        livres.push(livre);
-      });
+      const livreDonnees = await db
+        .collection("livres")
+        .where("id", "==", id)
+        .get();
 
-      livres.forEach((livre) => {
-        if (id === livre.id) {
-          idExiste = true;
-        }
-      });
+      console.log(livreDonnees.docs);
 
-      if (idExiste) {
-        await db.collection("livres").doc(id).update(body);
-        return res
-          .status(201)
-          .json({ message: "Le livre a été modifié", livre: body });
-      } else {
-        return res.status(404).json({
-          message:
-            "Le livre n'existe pas. Réessayer avec un autre identifiant.",
-        });
+      if (livreDonnees.docs.length == 0) {
+        return res.status(400).json({ message: "Le livre n'existe pas." });
       }
+      await db.collection("livres").doc(id).update(body);
+      return res
+        .status(201)
+        .json({ message: "Le livre a été modifié", livre: body });
     } catch (erreur) {
       return res.status(500).json({
         message:
@@ -553,13 +552,13 @@ routeur.delete(
       } else {
         return res.status(404).json({
           message:
-            "Le livre n'existe pas. Réessayer avec un autre identifiant."
+            "Le livre n'existe pas. Réessayer avec un autre identifiant.",
         });
       }
     } catch (erreur) {
       return res.status(500).json({
         message:
-          "Le livre n'a pas pu être supprimé. Veuillez réessayer dans quelques instants"
+          "Le livre n'a pas pu être supprimé. Veuillez réessayer dans quelques instants",
       });
     }
   }
