@@ -16,7 +16,6 @@ routeur.get(
       .escape()
       .trim()
       .optional()
-      // .isString()
       .isLength({ max: 100 })
       .isIn(["titre", "auteur", "date"])
       .withMessage("Vous pouvez ordonner par titre, auteur ou date."),
@@ -56,6 +55,27 @@ routeur.get(
         const livre = { id: donnee.id, ...donnee.data() };
         livres.push(livre);
       });
+
+      if (ordre == "titre" && direction == "asc") {
+        livres.sort((a, b) => {
+          return a.titre.localeCompare(b.titre);
+        })
+      }
+      if (ordre == "titre" && direction == "desc") {
+        livres.sort((a, b) => {
+          return b.titre.localeCompare(a.titre);
+        });
+      }
+      if (ordre == "auteur" && direction == "asc") {
+        livres.sort((a, b) => {
+          return a.auteur.localeCompare(b.auteur);
+        });
+      }
+      if (ordre == "auteur" && direction == "desc") {
+        livres.sort((a, b) => {
+          return b.auteur.localeCompare(a.auteur);
+        });
+      }
 
       if (livres.length == 0) {
         return res.status(404).json({ message: "Aucun livre trouvé" });
@@ -135,6 +155,16 @@ routeur.get(
           livres.push(livre);
         }
       });
+      if (ordre == "titre" && direction == "asc") {
+        livres.sort((a, b) => {
+          return a.titre.localeCompare(b.titre);
+        });
+      }
+      if (ordre == "titre" && direction == "desc") {
+        livres.sort((a, b) => {
+          return b.titre.localeCompare(a.titre);
+        });
+      }
       if (livres.length == 0) {
         return res
           .status(404)
@@ -169,7 +199,7 @@ routeur.get(
       .trim()
       .optional()
       .isLength({ max: 100 })
-      .isIn(["titre", "date"])
+      .isIn(["titre", "date", "auteur"])
       .withMessage("Vous pouvez ordonner par titre ou date."),
     check("direction")
       .escape()
